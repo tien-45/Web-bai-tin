@@ -1,95 +1,163 @@
 # Web-bai-tin
 Đây là trang web giúp mọi người có thể gửi gắm những thông điệp mà mình muốn nhân nhủ cho mọi người hoặc ghi lại kỉ niệm của bản thân hiện tại cho tương lai.
-// Public version plan (Supabase + Next.js)
-// File 1: next.config.js
-module.exports = {
-  reactStrictMode: true,
-}
 
-// File 2: utils/supabase.js
-import { createClient } from '@supabase/supabase-js'
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-)
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kỷ niệm K28</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Kỷ niệm K28</h1>
+  </header>
 
-// File 3: pages/index.js (Home: list entries)
-import { supabase } from '../utils/supabase'
-import Link from 'next/link'
+  <main>
+    <section class="entry-form">
+      <h2>Ghi lại kỷ niệm</h2>
+      <form id="journalForm">
+        <input type="text" id="name" placeholder="Tên của bạn" required>
+        <input type="number" id="age" placeholder="Tuổi" required>
+        <input type="date" id="date" required>
+        <textarea id="content" placeholder="Nhập suy nghĩ, kỷ niệm..." required></textarea>
+        <input type="file" id="image" accept="image/*">
+        <button type="submit">Thêm kỷ niệm</button>
+      </form>
+    </section>
 
-export async function getServerSideProps() {
-  const { data } = await supabase.from('memories').select('*').order('created_at', { ascending: false })
-  return { props: { entries: data || [] } }
-}
-
-export default function Home({ entries }) {
-  return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold text-sky-700">Kỉ niệm thời học sinh</h1>
-      <Link href="/new" className="text-sky-600 underline">Tạo kỉ niệm mới</Link>
-
-      <div className="mt-6 space-y-4">
-        {entries.map(e => (
-          <div key={e.id} className="p-4 bg-white shadow rounded-xl">
-            <h2 className="text-xl font-semibold">{e.name}</h2>
-            <div className="text-sm text-slate-500">Tuổi: {e.age} • {new Date(e.created_at).toLocaleString()}</div>
-            <p className="mt-2 whitespace-pre-wrap">{e.text}</p>
-            {e.image_url && <img src={e.image_url} className="mt-3 rounded" />}
-          </div>
-        ))}
+    <section class="entries">
+      <h2>Các kỷ niệm</h2>
+      <div id="entriesContainer">
+        <!-- Các kỷ niệm sẽ hiển thị ở đây -->
       </div>
-    </div>
-  )
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>body {
+  font-family: Arial, sans-serif;
+  background-color: #e0f7fa; /* xanh nước nhạt */
+  color: #006064; /* xanh đậm */
+  margin: 0;
+  padding: 0;
 }
 
-// File 4: pages/new.js (Create entry)
-import { useState } from 'react'
-import { supabase } from '../utils/supabase'
-import { useRouter } from 'next/router'
+header {
+  text-align: center;
+  background-color: #00acc1;
+  color: white;
+  padding: 1rem 0;
+}
 
-export default function NewEntry() {
-  const router = useRouter()
-  const [name, setName] = useState('')
-  const [age, setAge] = useState('')
-  const [text, setText] = useState('')
-  const [file, setFile] = useState(null)
+h1, h2 {
+  margin: 0.5rem 0;
+}
 
-  async function submit() {
-    let image_url = null
-    if (file) {
-      const fileName = `${Date.now()}-${file.name}`
-      const { data } = await supabase.storage.from('images').upload(fileName, file)
-      const publicURL = supabase.storage.from('images').getPublicUrl(fileName).data.publicUrl
-      image_url = publicURL
-    }
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
 
-    await supabase.from('memories').insert({ name, age, text, image_url })
-    router.push('/')
+.entry-form, .entries {
+  background-color: #b2ebf2;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+input, textarea, button {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #006064;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #00acc1;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background-color: #00838f;
+}
+
+.entry {
+  border-bottom: 1px solid #006064;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.entry img {
+  max-width: 100%;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+}const form = document.getElementById('journalForm');
+const entriesContainer = document.getElementById('entriesContainer');
+
+function loadEntries() {
+  const entries = JSON.parse(localStorage.getItem('entries') || '[]');
+  entriesContainer.innerHTML = '';
+  entries.reverse().forEach(entry => {
+    displayEntry(entry);
+  });
+}
+
+function displayEntry(entry) {
+  const entryDiv = document.createElement('div');
+  entryDiv.classList.add('entry');
+
+  entryDiv.innerHTML = `
+    <h3>${entry.name} (${entry.age} tuổi) - ${entry.date}</h3>
+    <p>${entry.content}</p>
+  `;
+
+  if (entry.image) {
+    const img = document.createElement('img');
+    img.src = entry.image;
+    entryDiv.appendChild(img);
   }
 
-  return (
-    <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold text-sky-700">Thêm kỉ niệm</h1>
-
-      <div className="mt-4 space-y-3">
-        <input className="border p-2 w-full" placeholder="Tên" value={name} onChange={e => setName(e.target.value)} />
-        <input className="border p-2 w-full" placeholder="Tuổi" value={age} onChange={e => setAge(e.target.value)} />
-        <textarea className="border p-2 w-full" rows={6} placeholder="Nội dung" value={text} onChange={e => setText(e.target.value)} />
-        <input type="file" onChange={e => setFile(e.target.files[0])} />
-        <button onClick={submit} className="px-4 py-2 bg-sky-600 text-white rounded">Lưu</button>
-      </div>
-    </div>
-  )
+  entriesContainer.appendChild(entryDiv);
 }
 
-// File 5: SQL for Supabase
-/*
-create table memories (
-  id bigint generated always as identity primary key,
-  name text,
-  age text,
-  text text,
-  image_url text,
-  created_at timestamp default now()
-);
-*/
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const age = document.getElementById('age').value;
+  const date = document.getElementById('date').value;
+  const content = document.getElementById('content').value;
+  const imageFile = document.getElementById('image').files[0];
+
+  if (imageFile) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      const imageData = reader.result;
+      saveEntry({name, age, date, content, image: imageData});
+    }
+    reader.readAsDataURL(imageFile);
+  } else {
+    saveEntry({name, age, date, content, image: null});
+  }
+
+  form.reset();
+});
+
+function saveEntry(entry) {
+  const entries = JSON.parse(localStorage.getItem('entries') || '[]');
+  entries.push(entry);
+  localStorage.setItem('entries', JSON.stringify(entries));
+  loadEntries();
+}
+
+// Load entries when page loads
+loadEntries();
