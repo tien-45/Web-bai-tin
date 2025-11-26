@@ -1,0 +1,64 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e0f7fa; /* xanh nước nhạt */
+  color: #006064; /* xanh đậm */
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  background-color: #00acc1;
+  color: white;
+  padding: 1rem 0;
+}
+
+h1, h2 {
+  margin: 0.5rem 0;
+}
+
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.entry-form, .entries {
+  background-color: #b2ebf2;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+input, textarea, button {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid #006064;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #00acc1;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+button:hover {
+  background-color: #00838f;
+}
+
+.entry {
+  border-bottom: 1px solid #006064;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.entry img {
+  max-width: 100%;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+}
