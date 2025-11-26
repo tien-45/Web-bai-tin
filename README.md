@@ -1,6 +1,3 @@
-# Web-bai-tin
-Đây là trang web giúp mọi người có thể gửi gắm những thông điệp mà mình muốn nhân nhủ cho mọi người hoặc ghi lại kỉ niệm của bản thân hiện tại cho tương lai.
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -37,7 +34,8 @@
 
   <script src="script.js"></script>
 </body>
-</html>body {
+</html>
+body {
   font-family: Arial, sans-serif;
   background-color: #e0f7fa; /* xanh nước nhạt */
   color: #006064; /* xanh đậm */
@@ -100,9 +98,11 @@ button:hover {
   max-width: 100%;
   margin-top: 0.5rem;
   border-radius: 5px;
-}const form = document.getElementById('journalForm');
+}
+const form = document.getElementById('journalForm');
 const entriesContainer = document.getElementById('entriesContainer');
 
+// Load dữ liệu từ LocalStorage khi mở trang
 function loadEntries() {
   const entries = JSON.parse(localStorage.getItem('entries') || '[]');
   entriesContainer.innerHTML = '';
@@ -111,6 +111,7 @@ function loadEntries() {
   });
 }
 
+// Hiển thị 1 kỷ niệm
 function displayEntry(entry) {
   const entryDiv = document.createElement('div');
   entryDiv.classList.add('entry');
@@ -129,6 +130,7 @@ function displayEntry(entry) {
   entriesContainer.appendChild(entryDiv);
 }
 
+// Thêm kỷ niệm mới
 form.addEventListener('submit', function(e) {
   e.preventDefault();
 
@@ -152,6 +154,7 @@ form.addEventListener('submit', function(e) {
   form.reset();
 });
 
+// Lưu kỷ niệm vào LocalStorage và load lại
 function saveEntry(entry) {
   const entries = JSON.parse(localStorage.getItem('entries') || '[]');
   entries.push(entry);
@@ -159,5 +162,5 @@ function saveEntry(entry) {
   loadEntries();
 }
 
-// Load entries when page loads
+// Load entries khi mở trang
 loadEntries();
