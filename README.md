@@ -1,8 +1,5 @@
-ky-niem-k28 (root repo)
-│
-├── index.html
-├── style.css
-└── script.js
+<link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
 
 <!DOCTYPE html>
 <html lang="vi">
