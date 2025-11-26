@@ -1,3 +1,9 @@
+ky-niem-k28 (root repo)
+│
+├── index.html
+├── style.css
+└── script.js
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
